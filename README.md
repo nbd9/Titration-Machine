@@ -1,5 +1,14 @@
 # The Titration Machine
 
-(c) 2018
+## Automating titrations with the help of an Arduino.
+
 Created by Nick DeGroot and Trevor Li.
-Automating titrations with the help of an Arduino.
+
+## Libraries Used
+
+- LiquidCrystal.h (comes standard)
+- [Vernier](https://github.com/VernierSoftwareTechnology/VernierLib)
+
+## Wiring
+
+![Wiring](.github/Wiring.jpg)

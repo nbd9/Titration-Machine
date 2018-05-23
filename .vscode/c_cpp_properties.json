@@ -23,6 +23,20 @@
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c11",
             "cppStandard": "c++17"
+        },
+        {
+            "name": "Windows",
+            "includePath": [
+                "C:\\Program Files (x86)\\Arduino\\libraries",
+                "C:\\Users\\nbdeg\\Documents\\Arduino\\libraries"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "C:\\Program Files (x86)\\Arduino\\libraries",
+                    "C:\\Users\\nbdeg\\Documents\\Arduino\\libraries"
+                ]
+            }
         }
     ],
     "version": 4
