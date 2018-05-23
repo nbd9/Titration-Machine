@@ -3,9 +3,7 @@
 // Created for the LOHS AP Chemistry final project.
 // Hardcoded for HCl + NaOH --> H2O + NaCl, or any 1:1 acid base ratio
 
-#include <LiquidCrystal.h>
 #include "VernierLib.h"
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 VernierLib Vernier;
 
 // ACID BASE VALUES
@@ -24,13 +22,6 @@ float mlBaseForNeutralization = 0.0;
 
 void setup() {
   Vernier.autoID();
-  lcd.begin(16, 2);
-
-  // Start LCD print.
-  lcd.clear();
-  lcd.print("The Titrator");
-  delay(2000);
-  lcd.clear();
 
   Serial.begin(9600);
 }
@@ -38,39 +29,36 @@ void setup() {
 void loop() {
   float sensorPh = Vernier.readSensor(); // Getting pH
 
-  int photogate = digitalRead(6); // Low when blocked
-  if (photogate == LOW && !gateFlipped) {
-    mlBase += 0.05;
+  int photogate = digitalRead(2); // Low when blocked
+  if (photogate == LOW) {
+    if (!gateFlipped) {
+      gateFlipped = true;
+      mlBase += 0.05;
 
-    float firstDeriv = (sensorPh - pH) / (0.05);
-    if (highestDeriv < firstDeriv) {
-      highestDeriv = firstDeriv;
-      mlBaseForNeutralization = mlBase;
+      float firstDeriv = (sensorPh - pH) / (0.05);
+      if (highestDeriv < firstDeriv) {
+        highestDeriv = firstDeriv;
+        mlBaseForNeutralization = mlBase;
 
-      // Calculating predicted molarity for current values
-      float molBase = (mlBase / 1000) * molarBase;
-      float molAcid = molBase;
-      molarAcid = molAcid / (mlAcid / 1000);
+        // Calculating predicted molarity for current values
+        float molBase = (mlBase / 1000) * molarBase;
+        float molAcid = molBase;
+        molarAcid = molAcid / (mlAcid / 1000);
+      }
+
+      // Setting global values
+      pH = sensorPh;
+
+      // Printing update to serial and LCD
+      Serial.print("pH: ");
+      Serial.print(pH, 5); // 5 Sig Figs
+      Serial.print("\tmL of Base: ");
+      Serial.print(mlBase);
+      Serial.print("\tPredicted acid molarity: ");
+      Serial.println(molarAcid, 5); // 5 Sig Figs
     }
-
-    // Setting global values
-    pH = sensorPh;
-    gateFlipped = true;
-
-    // Printing update to serial and LCD
-    Serial.print("pH: ");
-    Serial.print(pH, 5); // 5 Sig Figs
-    Serial.print("\tmL of Base: ");
-    Serial.print(mlBase);
-    Serial.print("\tPredicted acid molarity: ");
-    Serial.println(molarAcid, 5); // 5 Sig Figs
-    lcd.setCursor(0, 1);
-    lcd.print(mlBase); 
-  } else {
-    gateFlipped = false;
-  }
-
-  lcd.setCursor(0, 0);
-  lcd.print(sensorPh, 5); // 5 Sig Figs
+ } else {
+   gateFlipped = false;
+ }
 }
 
