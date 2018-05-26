@@ -7,13 +7,14 @@
 VernierLib Vernier;
 
 // ACID BASE VALUES
-// Constants
-const int pKw = 14;
-const float mlAcid = 25.0;
+// CHANGE THESE BASED ON EXPERIMENT
+const float mlAcid = 50.0;
 const float molarBase = 0.1;
+const float mlPerDrop = 0.045;
+const float dropOffset = 10.0;
 
 // Global Values
-float mlBase = 0.0; // 20 DROPS = 1 mL
+float mlBase = mlPerDrop * (-1.0 * dropOffset);
 float molarAcid = 0.0;
 float pH = 0.0;
 bool gateFlipped = false;
@@ -22,8 +23,11 @@ float mlBaseForNeutralization = 0.0;
 
 void setup() {
   Vernier.autoID();
-
+  pH = Vernier.readSensor();
+  
   Serial.begin(9600);
+  Serial.print("Initial pH: ")
+  Serial.println(pH);
 }
  
 void loop() {
@@ -33,9 +37,10 @@ void loop() {
   if (photogate == LOW) {
     if (!gateFlipped) {
       gateFlipped = true;
-      mlBase += 0.05;
+      mlBase += mlPerDrop;
 
-      float firstDeriv = (sensorPh - pH) / (0.05);
+      float firstDeriv = (sensorPh - pH) / mlPerDrop;
+      Serial.println(firstDeriv);
       if (highestDeriv < firstDeriv) {
         highestDeriv = firstDeriv;
         mlBaseForNeutralization = mlBase;
