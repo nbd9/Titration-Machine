@@ -11,7 +11,7 @@ VernierLib Vernier;
 const float mlAcid = 50.0;
 const float molarBase = 0.1;
 const float mlPerDrop = 0.045;
-const float dropOffset = 10.0;
+const float dropOffset = 20.0;
 
 // Global Values
 float mlBase = mlPerDrop * (-1.0 * dropOffset);
@@ -19,14 +19,13 @@ float molarAcid = 0.0;
 float pH = 0.0;
 bool gateFlipped = false;
 float highestDeriv = 0.0;
-float mlBaseForNeutralization = 0.0;
 
 void setup() {
   Vernier.autoID();
   pH = Vernier.readSensor();
   
   Serial.begin(9600);
-  Serial.print("Initial pH: ")
+  Serial.print("Initial pH: ");
   Serial.println(pH);
 }
  
@@ -40,10 +39,8 @@ void loop() {
       mlBase += mlPerDrop;
 
       float firstDeriv = (sensorPh - pH) / mlPerDrop;
-      Serial.println(firstDeriv);
       if (highestDeriv < firstDeriv) {
         highestDeriv = firstDeriv;
-        mlBaseForNeutralization = mlBase;
 
         // Calculating predicted molarity for current values
         float molBase = (mlBase / 1000) * molarBase;
